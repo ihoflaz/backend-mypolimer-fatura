@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Environment files (IMPORTANT: contains database credentials)
+.env
+.env.local
+.env.development
+.env.production
+
+# Uploaded files
+public/uploads/*
+!public/uploads/.gitkeep
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Database backup files
+*.dump
+*.sql
+*.backup
+
+# Temporary files
+*.tmp
+*.temp
