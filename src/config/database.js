@@ -1,5 +1,4 @@
-const { Sequelize } = require('sequelize');
-require('dotenv').config();
+const pg = require('pg');
 
 let sequelize;
 
@@ -7,6 +6,7 @@ let sequelize;
 if (process.env.DATABASE_URL) {
   sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
+    dialectModule: pg, // Vercel için gerekli
     logging: false,
     dialectOptions: {
       ssl: {
