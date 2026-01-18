@@ -11,9 +11,12 @@ const PORT = process.env.PORT || 3000;
 
 if (process.env.VERCEL) {
     // Vercel Serverless Function
-    // Veritabanı bağlantısını her istekte kontrol etmek gerekebilir veya
-    // global bağlantı havuzu kullanılabilir.
-    // Şimdilik basitçe app'i export ediyoruz.
+    // Veritabanı senkronizasyonu için bir kerelik sync çalıştır
+    sequelize.sync({ alter: true }).then(() => {
+        console.log('Database synced on Vercel');
+    }).catch(err => {
+        console.error('Database sync error:', err);
+    });
     module.exports = app;
 } else {
     // Local Server
