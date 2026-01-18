@@ -5,23 +5,35 @@ const cron = require('node-cron');
 
 const PORT = process.env.PORT || 3000;
 
-async function startServer() {
-    try {
-        await sequelize.authenticate();
-        console.log('Database connection established successfully.');
-        await sequelize.sync({ alter: true }); // Sync models
+// vercel.json'da src olarak bu dosya gösterildiği için,
+// Vercel ortamında app'i export etmemiz gerekiyor.
+// Yerel ortamda ise listen ile sunucuyu başlatıyoruz.
 
-        // Schedule cron job for 09:00 AM
-        cron.schedule('0 9 * * *', async () => {
-            console.log('Fetching daily exchange rates...');
-        });
+if (process.env.VERCEL) {
+    // Vercel Serverless Function
+    // Veritabanı bağlantısını her istekte kontrol etmek gerekebilir veya
+    // global bağlantı havuzu kullanılabilir.
+    // Şimdilik basitçe app'i export ediyoruz.
+    module.exports = app;
+} else {
+    // Local Server
+    async function startServer() {
+        try {
+            await sequelize.authenticate();
+            console.log('Database connection established successfully.');
+            await sequelize.sync({ alter: true }); // Sync models
 
-        app.listen(PORT, () => {
-            console.log(`Server is running on port ${PORT}`);
-        });
-    } catch (error) {
-        console.error('Unable to connect to the database:', error);
+            // Schedule cron job for 09:00 AM (only runs on persistent server)
+            cron.schedule('0 9 * * *', async () => {
+                console.log('Fetching daily exchange rates...');
+            });
+
+            app.listen(PORT, () => {
+                console.log(`Server is running on port ${PORT}`);
+            });
+        } catch (error) {
+            console.error('Unable to connect to the database:', error);
+        }
     }
+    startServer();
 }
-
-startServer();

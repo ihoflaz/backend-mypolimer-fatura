@@ -1,8 +1,15 @@
-const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const http = require('http');
+// Conditionally load puppeteer/chromium
+const chromium = require('@sparticuz/chromium');
+const puppeteerCore = require('puppeteer-core');
+// Standard puppeteer for local dev fallback requires a try-catch for import if not needed, 
+// but since we have it installed, we can just require it conditionally or check env.
+// A simpler dual-mode approach:
+
+let browser;
 
 // URL'den görsel indirip base64'e çeviren yardımcı fonksiyon
 async function fetchImageAsBase64(url) {
@@ -22,9 +29,25 @@ async function fetchImageAsBase64(url) {
     });
 }
 
+async function getBrowser() {
+    if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+        // Vercel / Lambda environment
+        return puppeteerCore.launch({
+            args: chromium.args,
+            defaultViewport: chromium.defaultViewport,
+            executablePath: await chromium.executablePath(),
+            headless: chromium.headless,
+        });
+    } else {
+        // Local environment
+        const puppeteer = require('puppeteer');
+        return puppeteer.launch({ headless: 'new' });
+    }
+}
+
 async function generateInvoicePDF(invoiceData, companySettings) {
     try {
-        const browser = await puppeteer.launch({ headless: 'new' });
+        const browser = await getBrowser();
         const page = await browser.newPage();
 
         // Logo işleme (Sol üst köşe için)
