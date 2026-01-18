@@ -182,3 +182,30 @@ exports.deleteInvoice = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
+exports.cancelInvoice = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { cancellation_reason } = req.body;
+
+        const invoice = await Invoice.findByPk(id);
+
+        if (!invoice) {
+            return res.status(404).json({ message: 'Sipariş bulunamadı' });
+        }
+
+        if (invoice.status === 'Cancelled') {
+            return res.status(400).json({ message: 'Bu sipariş zaten iptal edilmiş' });
+        }
+
+        await invoice.update({
+            status: 'Cancelled',
+            cancellation_reason: cancellation_reason || '',
+            cancelled_at: new Date()
+        });
+
+        res.json({ message: 'Sipariş başarıyla iptal edildi', invoice });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};

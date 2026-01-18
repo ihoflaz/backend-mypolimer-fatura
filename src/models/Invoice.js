@@ -53,6 +53,14 @@ const Invoice = sequelize.define('Invoice', {
         type: DataTypes.DATE,
         allowNull: true,
     },
+    cancellation_reason: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
+    cancelled_at: {
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
 }, {
     timestamps: true,
 });

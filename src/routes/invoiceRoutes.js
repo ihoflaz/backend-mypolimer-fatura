@@ -12,5 +12,6 @@ router.put('/:id', invoiceController.updateInvoice);
 router.delete('/:id', invoiceController.deleteInvoice);
 router.get('/:id/pdf', invoiceController.getInvoicePdf);
 router.put('/:id/mark-invoiced', invoiceController.markAsInvoiced);
+router.put('/:id/cancel', invoiceController.cancelInvoice);
 
 module.exports = router;
