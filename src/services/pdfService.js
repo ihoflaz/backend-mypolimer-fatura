@@ -465,32 +465,53 @@ async function generateInvoicePDF(invoiceData, companySettings) {
                 <!-- 5. SİPARİŞ TABLOSU -->
                 <div class="table-container">
                     ${watermarkBase64 ? `<img src="${watermarkBase64}" class="watermark" />` : ''}
+                    
+                    ${invoiceData.is_bonded_warehouse ? `
+                    <div style="background-color: #fff3cd; border: 1px solid #ffc107; padding: 8px; margin-bottom: 10px; font-size: 9px; font-weight: bold;">
+                        ⚠️ ANTREPOLU DEVİR - KDV %0 OLARAK UYGULANMIŞTIR
+                    </div>
+                    ` : ''}
+                    
+                    ${invoiceData.is_vat_included ? `
+                    <div style="background-color: #d1ecf1; border: 1px solid #bee5eb; padding: 8px; margin-bottom: 10px; font-size: 9px; font-weight: bold;">
+                        ℹ️ FİYATLAR %20 KDV DAHİL OLARAK GÖSTERİLMİŞTİR
+                    </div>
+                    ` : ''}
+                    
                     <table class="products-table">
                         <thead>
                             <tr>
                                 <th style="width: 28%;">AÇIKLAMA</th>
                                 <th style="width: 15%;">MİKTAR (KG)</th>
-                                <th style="width: 15%;">FİYAT</th>
+                                <th style="width: 15%;">FİYAT${invoiceData.is_vat_included ? ' (KDV DAHİL)' : ''}</th>
                                 <th style="width: 20%;">TUTAR</th>
                                 <th style="width: 22%;">TESLİM YERİ</th>
                             </tr>
                         </thead>
                         <tbody>
-                            ${(invoiceData.InvoiceItems || []).map(item => `
+                            ${(invoiceData.InvoiceItems || []).map(item => {
+            // KDV Dahil ise fiyatı %20 artır
+            const displayPrice = invoiceData.is_vat_included
+                ? Number(item.unit_price) * 1.20
+                : Number(item.unit_price);
+            const displayTotal = invoiceData.is_vat_included
+                ? Number(item.line_total) * 1.20
+                : Number(item.line_total);
+            return `
                                 <tr>
                                     <td>${item.Product?.product_name || ''}</td>
                                     <td>${formatQuantity(item.quantity)}</td>
-                                    <td>${formatCurrency(item.unit_price, currency)}</td>
-                                    <td>${formatCurrency(item.line_total, currency)}</td>
+                                    <td>${formatCurrency(displayPrice, currency)}</td>
+                                    <td>${formatCurrency(displayTotal, currency)}</td>
                                     <td>${item.delivery_location || ''}</td>
                                 </tr>
-                            `).join('')}
+                            `}).join('')}
                         </tbody>
                         <tfoot>
                             <tr>
                                 <td colspan="2"></td>
-                                <td class="total-label">TOPLAM:</td>
-                                <td class="total-value">${formatCurrency(invoiceData.total_amount_currency, currency)}</td>
+                                <td class="total-label">TOPLAM${invoiceData.is_vat_included ? ' (KDV DAHİL)' : ''}:</td>
+                                <td class="total-value">${formatCurrency(invoiceData.is_vat_included ? Number(invoiceData.total_amount_currency) * 1.20 : invoiceData.total_amount_currency, currency)}</td>
                                 <td></td>
                             </tr>
                         </tfoot>
