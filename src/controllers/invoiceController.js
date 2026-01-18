@@ -82,6 +82,7 @@ exports.getInvoicePdf = async (req, res) => {
 exports.markAsInvoiced = async (req, res) => {
     try {
         const { id } = req.params;
+        const { exchange_rate_usd } = req.body;
         const invoice = await Invoice.findByPk(id);
 
         if (!invoice) {
@@ -92,9 +93,18 @@ exports.markAsInvoiced = async (req, res) => {
             return res.status(400).json({ message: 'Bu fatura zaten faturalaştırılmış' });
         }
 
+        if (!exchange_rate_usd) {
+            return res.status(400).json({ message: 'Döviz kuru gereklidir' });
+        }
+
+        // Calculate TRY amount
+        const totalTry = parseFloat(invoice.total_amount_currency || 0) * parseFloat(exchange_rate_usd);
+
         await invoice.update({
             is_invoiced: true,
-            invoiced_at: new Date()
+            invoiced_at: new Date(),
+            exchange_rate_usd: exchange_rate_usd,
+            total_amount_try: totalTry
         });
 
         res.json({ message: 'Fatura başarıyla faturalaştırıldı', invoice });

@@ -61,6 +61,14 @@ const Invoice = sequelize.define('Invoice', {
         type: DataTypes.DATE,
         allowNull: true,
     },
+    is_bonded_warehouse: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
+    is_vat_included: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
 }, {
     timestamps: true,
 });
