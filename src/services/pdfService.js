@@ -110,13 +110,18 @@ async function generateInvoicePDF(invoiceData, companySettings) {
         const formatCurrency = (amount, curr = 'USD') => {
             let symbol = '$';
             if (curr === 'EUR') symbol = '€';
-            else if (curr === 'TRY') symbol = '₺';
+            else if (curr === 'TRY') symbol = 'TL ';  // ₺ yerine TL kullan (Vercel Chromium font sorunu)
             else if (curr === 'USD') symbol = '$';
 
             const formatted = Number(amount).toLocaleString('en-US', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             });
+
+            // TRY için sembol sona gelsin: 1,000.00 TL
+            if (curr === 'TRY') {
+                return `${formatted} TL`;
+            }
             return `${symbol}${formatted}`;
         };
 
