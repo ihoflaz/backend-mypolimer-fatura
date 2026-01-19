@@ -107,8 +107,12 @@ async function generateInvoicePDF(invoiceData, companySettings) {
         };
 
         // Para birimi formatlama
-        const formatCurrency = (amount, currency = 'USD') => {
-            const symbol = currency === 'USD' ? '$' : currency === 'EUR' ? '€' : '₺';
+        const formatCurrency = (amount, curr = 'USD') => {
+            let symbol = '$';
+            if (curr === 'EUR') symbol = '€';
+            else if (curr === 'TRY') symbol = '₺';
+            else if (curr === 'USD') symbol = '$';
+
             const formatted = Number(amount).toLocaleString('en-US', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
