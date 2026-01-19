@@ -127,8 +127,10 @@ async function generateInvoicePDF(invoiceData, companySettings) {
                 maximumFractionDigits: 3
             });
         };
-        // Para birimi - faturadan al
-        const currency = invoiceData.currency || 'USD';
+        // Para birimi - faturadan al (Sequelize model'den)
+        const invoiceCurrency = invoiceData.currency || invoiceData.dataValues?.currency || 'USD';
+        console.log('Invoice currency value:', invoiceCurrency, 'Type:', typeof invoiceCurrency);
+        const currency = invoiceCurrency;
 
         const htmlContent = `
             <!DOCTYPE html>
