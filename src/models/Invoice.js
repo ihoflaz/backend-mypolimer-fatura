@@ -69,6 +69,10 @@ const Invoice = sequelize.define('Invoice', {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
     },
+    currency: {
+        type: DataTypes.ENUM('USD', 'EUR', 'TRY'),
+        defaultValue: 'USD',
+    },
 }, {
     timestamps: true,
 });

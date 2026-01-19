@@ -123,8 +123,8 @@ async function generateInvoicePDF(invoiceData, companySettings) {
                 maximumFractionDigits: 3
             });
         };
-
-        const currency = invoiceData.InvoiceItems?.[0]?.Product?.currency || 'USD';
+        // Para birimi - faturadan al
+        const currency = invoiceData.currency || 'USD';
 
         const htmlContent = `
             <!DOCTYPE html>
