@@ -77,4 +77,26 @@ const Invoice = sequelize.define('Invoice', {
     timestamps: true,
 });
 
+// Override toJSON to preserve decimal precision
+Invoice.prototype.toJSON = function() {
+    const values = Object.assign({}, this.get());
+
+    // Preserve 3 decimal places for currency amounts
+    if (values.total_amount_currency !== undefined && values.total_amount_currency !== null) {
+        values.total_amount_currency = parseFloat(Number(values.total_amount_currency).toFixed(3));
+    }
+    if (values.total_amount_try !== undefined && values.total_amount_try !== null) {
+        values.total_amount_try = parseFloat(Number(values.total_amount_try).toFixed(3));
+    }
+    // Preserve 4 decimal places for exchange rates
+    if (values.exchange_rate_usd !== undefined && values.exchange_rate_usd !== null) {
+        values.exchange_rate_usd = parseFloat(Number(values.exchange_rate_usd).toFixed(4));
+    }
+    if (values.exchange_rate_eur !== undefined && values.exchange_rate_eur !== null) {
+        values.exchange_rate_eur = parseFloat(Number(values.exchange_rate_eur).toFixed(4));
+    }
+
+    return values;
+};
+
 module.exports = Invoice;
