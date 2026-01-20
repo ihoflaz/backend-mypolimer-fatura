@@ -31,7 +31,7 @@ const Product = sequelize.define('Product', {
         type: DataTypes.STRING,
     },
     unit_price: {
-        type: DataTypes.DECIMAL(10, 2),
+        type: DataTypes.DECIMAL(10, 3),
     },
     currency: {
         type: DataTypes.ENUM('USD', 'EUR'),

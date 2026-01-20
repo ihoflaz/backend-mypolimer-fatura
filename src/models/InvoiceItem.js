@@ -16,7 +16,7 @@ const InvoiceItem = sequelize.define('InvoiceItem', {
         allowNull: false,
     },
     quantity: {
-        type: DataTypes.DECIMAL(10, 2),
+        type: DataTypes.DECIMAL(10, 3),
         allowNull: false,
     },
     unit: {
@@ -24,7 +24,7 @@ const InvoiceItem = sequelize.define('InvoiceItem', {
         defaultValue: 'KG',
     },
     unit_price: {
-        type: DataTypes.DECIMAL(10, 2),
+        type: DataTypes.DECIMAL(10, 3),
         allowNull: false,
     },
     vat_rate: {
@@ -32,7 +32,7 @@ const InvoiceItem = sequelize.define('InvoiceItem', {
         defaultValue: 20,
     },
     line_total: {
-        type: DataTypes.DECIMAL(15, 2),
+        type: DataTypes.DECIMAL(15, 3),
     },
     delivery_location: {
         type: DataTypes.STRING,
