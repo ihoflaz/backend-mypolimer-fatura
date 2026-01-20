@@ -27,10 +27,10 @@ const Invoice = sequelize.define('Invoice', {
         type: DataTypes.DECIMAL(10, 4),
     },
     total_amount_currency: {
-        type: DataTypes.DECIMAL(15, 2),
+        type: DataTypes.DECIMAL(15, 3),
     },
     total_amount_try: {
-        type: DataTypes.DECIMAL(15, 2),
+        type: DataTypes.DECIMAL(15, 3),
     },
     notes: {
         type: DataTypes.TEXT,

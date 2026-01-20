@@ -115,7 +115,7 @@ async function generateInvoicePDF(invoiceData, companySettings) {
 
             const formatted = Number(amount).toLocaleString('en-US', {
                 minimumFractionDigits: 2,
-                maximumFractionDigits: 2
+                maximumFractionDigits: 3
             });
 
             // TRY için sembol sona gelsin: 1,000.00 TL
