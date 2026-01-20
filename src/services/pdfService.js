@@ -114,11 +114,11 @@ async function generateInvoicePDF(invoiceData, companySettings) {
             else if (curr === 'USD') symbol = '$';
 
             const formatted = Number(amount).toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
+                minimumFractionDigits: 3,
+                maximumFractionDigits: 3
             });
 
-            // TRY için sembol sona gelsin: 1,000.00 TL
+            // TRY için sembol sona gelsin: 1,000.000 TL
             if (curr === 'TRY') {
                 return `${formatted} TL`;
             }
