@@ -106,19 +106,27 @@ async function generateInvoicePDF(invoiceData, companySettings) {
             });
         };
 
-        // Para birimi formatlama
+        // Para birimi formatlama - akıllı ondalık basamak
         const formatCurrency = (amount, curr = 'USD') => {
             let symbol = '$';
             if (curr === 'EUR') symbol = '€';
-            else if (curr === 'TRY') symbol = 'TL ';  // ₺ yerine TL kullan (Vercel Chromium font sorunu)
+            else if (curr === 'TRY') symbol = '';  // TL sonda olacak
             else if (curr === 'USD') symbol = '$';
 
-            const formatted = Number(amount).toLocaleString('en-US', {
-                minimumFractionDigits: 3,
-                maximumFractionDigits: 3
+            const num = Number(amount);
+
+            // 3. ondalık basamağı kontrol et
+            const thirdDecimal = Math.round((num * 1000) % 10);
+
+            // Eğer 3. basamak 0 ise 2 basamak göster, değilse 3 basamak
+            const decimalPlaces = thirdDecimal === 0 ? 2 : 3;
+
+            const formatted = num.toLocaleString('en-US', {
+                minimumFractionDigits: decimalPlaces,
+                maximumFractionDigits: decimalPlaces
             });
 
-            // TRY için sembol sona gelsin: 1,000.000 TL
+            // TRY için sembol sona gelsin: 1,800.00 TL
             if (curr === 'TRY') {
                 return `${formatted} TL`;
             }
